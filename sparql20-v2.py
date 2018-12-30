@@ -24,4 +24,4 @@ print(results.serialize(format='n3'))
 #print(results.serialize(format='jsonld'))
 #print(results)
 
-#fb v2 22
+#fb
