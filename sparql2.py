@@ -1,5 +1,5 @@
 from SPARQLWrapper import SPARQLWrapper, RDFXML, N3, JSONLD
-from rdflib import Graph  
+from rdflib import Graph
 
 sparql = SPARQLWrapper("http://dbpedia.org/sparql")
 
@@ -23,3 +23,5 @@ results = sparql.query().convert()
 print(results.serialize(format='n3'))
 #print(results.serialize(format='jsonld'))
 #print(results)
+
+#fb
