@@ -1,12 +1,10 @@
-from SPARQLWrapper import SPARQLWrapper, RDFXML, N3, JSONLD
+from SPARQLWrapper import SPARQLWrapper, XML
 from rdflib import Graph
 
 sparql = SPARQLWrapper("http://dbpedia.org/sparql")
-
 sparql.setQuery("""
     PREFIX dbo: <http://dbpedia.org/ontology/>
     PREFIX schema: <http://schema.org/>
-
     CONSTRUCT {
       ?lang a schema:Language ;
       schema:alternateName ?iso6391Code .
@@ -18,10 +16,6 @@ sparql.setQuery("""
     }
 """)
 
-sparql.setReturnFormat(N3)
+sparql.setReturnFormat(XML)
 results = sparql.query().convert()
-print(results.serialize(format='n3'))
-#print(results.serialize(format='jsonld'))
-#print(results)
-
-#fb v2 22
+print(results.serialize(format='xml'))
