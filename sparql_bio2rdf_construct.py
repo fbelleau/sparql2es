@@ -8,6 +8,7 @@ from elasticsearch import Elasticsearch
 es = Elasticsearch([{'host': 'vps216232.vps.ovh.ca', 'port': 9200}])
 #print(es)
 
+# https://elasticsearch-py.readthedocs.io/en/master/
 # https://stackoverflow.com/questions/14962485/finding-a-key-recursively-in-a-dictionary
 
 def _finditem(obj, key):
