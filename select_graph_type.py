@@ -9,15 +9,6 @@ print(es)
 
 sparql = SPARQLWrapper("http://bio2rdf.org/sparql")
 
-query1 = """
-    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-    SELECT ?s count(*) as ?c
-    WHERE {
-        ?s ?p ?o .
-        FILTER(?s = <http://dbpedia.org/resource/Semantic_Web>)
-    }
-"""
-
 query2 = """
     select ?g ?t count(*) as ?c
     where {
