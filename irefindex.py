@@ -4,22 +4,29 @@
 import hashlib
 import json
 import re
+from datetime import datetime
 
 from elasticsearch import Elasticsearch
 
 def extract_uri(uri_label):
-    m = re.search('(.*?)[(](.*?)[)]', uri_label)
-    return m.group(1)
+    try:
+        m = re.search('(.*?)[(](.*?)[)]', uri_label)
+        return m.group(1)
+    except:
+        return uri_label
 
 def extract_label(uri_label):
-    m = re.search('(.*?)[(](.*?)[)]', uri_label)
-    return m.group(2)
+    try:
+        m = re.search('(.*?)[(](.*?)[)]', uri_label)
+        return m.group(1)
+    except:
+        return uri_label
 
 
 es = Elasticsearch([{'host': 'vps216232.vps.ovh.ca', 'port': 9200}])
 #print(es)
 
-file_in = open("../../Downloads/All.mitab.01-22-2018.txt", "r")
+file_in = open("All.mitab.01-22-2018.txt", "r")
 ctr = 1
 
 for line in file_in:
@@ -117,7 +124,17 @@ for line in file_in:
     #print(json_txt1)
 
     res = es.index(index="irefweb", doc_type='resource', body=json_txt1, id=uri_id)
+    res['ctr'] = ctr
+    res['uri_id'] = uri_id
+    res['timestamp'] = str(datetime.now())
+
     print(ctr, uri_id, res['result'])
+    #print(ctr, uri_id, res)
+    json_txt2 = json.dumps(res, sort_keys=True).replace('_','')
+    #print(json_txt2)
+
+    res = es.index(index="log", doc_type='irefweb', body=json_txt2)
+    #print(res)
 
     #there is double in the source file
     #res = es.index(index="irefweb", doc_type='resource', body=json_txt1, id=ctr)
