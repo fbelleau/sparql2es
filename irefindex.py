@@ -123,7 +123,7 @@ for line in file_in:
     json_txt1 = json.dumps(json1, sort_keys=True)
     #print(json_txt1)
 
-    res = es.index(index="irefweb", doc_type='resource', body=json_txt1, id=uri_id)
+    res = es.index(index="irefweb", doc_type='resource', body=json_txt1, id=ctr)
     res['ctr'] = ctr
     res['uri_id'] = uri_id
     res['timestamp'] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
