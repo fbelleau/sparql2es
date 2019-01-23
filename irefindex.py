@@ -126,7 +126,7 @@ for line in file_in:
     res = es.index(index="irefweb", doc_type='resource', body=json_txt1, id=uri_id)
     res['ctr'] = ctr
     res['uri_id'] = uri_id
-    res['timestamp'] = str(datetime.now())
+    res['timestamp'] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
 
     print(ctr, uri_id, res['result'])
     #print(ctr, uri_id, res)
