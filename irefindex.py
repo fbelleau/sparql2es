@@ -30,8 +30,9 @@ file_in = open("All.mitab.01-22-2018.txt", "r")
 ctr = 1
 
 for line in file_in:
-    if ctr == 1:
+    if ctr < 382000:
         ctr = ctr + 1
+        print(ctr)
         continue
     values = line.split("\t")
     #print(ctr, values)
