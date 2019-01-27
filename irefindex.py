@@ -4,8 +4,10 @@
 import hashlib
 import json
 import re
-from datetime import datetime
+import requests
 
+from datetime import datetime
+from collections import OrderedDict
 from elasticsearch import Elasticsearch
 
 def extract_uri(uri_label):
@@ -30,7 +32,7 @@ file_in = open("All.mitab.01-22-2018.txt", "r")
 ctr = 1
 
 for line in file_in:
-    if ctr < 382000:
+    if ctr < 2:
         ctr = ctr + 1
         print(ctr)
         continue
@@ -124,18 +126,29 @@ for line in file_in:
     json_txt1 = json.dumps(json1, sort_keys=True)
     #print(json_txt1)
 
-    res = es.index(index="irefweb", doc_type='resource', body=json_txt1, id=ctr)
+    r = requests.post("http://listener.logz.io:8070?token=MtnLBuVwrHlHVBTTDLbnkzuDwnOxqoHl&type=irefweb", data=json_txt1)
+    #res = es.index(index="irefweb", doc_type='resource', body=json_txt1, id=ctr)
+
+    res = {}
     res['ctr'] = ctr
     res['uri_id'] = uri_id
+    res['type'] = 'irefweb'
     res['timestamp'] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
 
-    print(ctr, uri_id, res['result'])
+    #print(ctr, uri_id, res['result'])
+    print(ctr, uri_id, res)
     #print(ctr, uri_id, res)
     json_txt2 = json.dumps(res, sort_keys=True).replace('_','')
     #print(json_txt2)
 
-    res = es.index(index="log", doc_type='irefweb', body=json_txt2)
+    #res = es.index(index="log", doc_type='irefweb', body=json_txt2)
     #print(res)
+
+    #curl -X POST "" -v --data-binary @-
+    #cat <FILE> | curl -X POST "https://listener.logz.io:8071?token=MtnLBuVwrHlHVBTTDLbnkzuDwnOxqoHl&type=<TYPE>" -v --data-binary @-
+
+    r = requests.post("http://listener.logz.io:8070?token=MtnLBuVwrHlHVBTTDLbnkzuDwnOxqoHl&type=log", data=json_txt2)
+    #print(r)
 
     #there is double in the source file
     #res = es.index(index="irefweb", doc_type='resource', body=json_txt1, id=ctr)
