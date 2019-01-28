@@ -151,31 +151,33 @@ for line in file_in:
             print(ctr, uri_id, res['result'])
         except:
             time.sleep(300)
+    finally:
+        res1 = {}
+        res1['ctr'] = ctr
+        res1['uri_id'] = uri_id
+        res1['result'] = res['result']
+        res1['index'] = 'irefweb'
+        res1['timestamp'] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
 
-    res = {}
-    res['ctr'] = ctr
-    res['uri_id'] = uri_id
-    res['index'] = 'irefweb'
-    res['timestamp'] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
+        #print(res1)
 
-    #print(ctr, uri_id, res)
-    #print(ctr, uri_id, res)
-    json_txt2 = json.dumps(res, sort_keys=True).replace('_','')
-    #print(json_txt2)
+        #print(ctr, uri_id, res)
+        json_txt2 = json.dumps(res1, sort_keys=True).replace('_','')
+        #print(json_txt2)
 
-    #res = es.index(index="log", doc_type='irefweb', body=json_txt2)
-    #print(res)
+        #res = es.index(index="log", doc_type='irefweb', body=json_txt2)
+        #print(res)
 
-    #curl -X POST "" -v --data-binary @-
-    #cat <FILE> | curl -X POST "https://listener.logz.io:8071?token=MtnLBuVwrHlHVBTTDLbnkzuDwnOxqoHl&type=<TYPE>" -v --data-binary @-
+        #curl -X POST "" -v --data-binary @-
+        #cat <FILE> | curl -X POST "https://listener.logz.io:8071?token=MtnLBuVwrHlHVBTTDLbnkzuDwnOxqoHl&type=<TYPE>" -v --data-binary @-
 
-    r = requests.post("http://listener.logz.io:8070?token=MtnLBuVwrHlHVBTTDLbnkzuDwnOxqoHl&type=log", data=json_txt2)
-    #print(r)
+        r = requests.post("http://listener.logz.io:8070?token=MtnLBuVwrHlHVBTTDLbnkzuDwnOxqoHl&type=log", data=json_txt2)
+        #print(r)
 
-    #there is double in the source file
-    #res = es.index(index="irefweb", doc_type='resource', body=json_txt1, id=ctr)
-    #print(ctr, uri_id, res['result'])
+        #there is double in the source file
+        #res = es.index(index="irefweb", doc_type='resource', body=json_txt1, id=ctr)
+        #print(ctr, uri_id, res['result'])
 
-#    if ctr == 3:
-#        break
-    ctr = ctr + 1
+    #    if ctr == 3:
+    #        break
+        ctr = ctr + 1
