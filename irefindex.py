@@ -5,6 +5,9 @@ import hashlib
 import json
 import re
 import requests
+import time
+
+import sys
 
 from datetime import datetime
 from collections import OrderedDict
@@ -24,18 +27,30 @@ def extract_label(uri_label):
     except:
         return uri_label
 
+debut = int(sys.argv[1])
+fin = int(sys.argv[2])
+print(debut, fin)
+#exit()
 
 es = Elasticsearch([{'host': 'vps216232.vps.ovh.ca', 'port': 9200}])
 #print(es)
+
+# wc -l = 2338338
 
 file_in = open("All.mitab.01-22-2018.txt", "r")
 ctr = 1
 
 for line in file_in:
-    if ctr < 2:
+    if ctr == 1:
+        ctr = ctr + 1
+        continue
+    if ctr < debut:
         ctr = ctr + 1
         print(ctr)
         continue
+    if ctr > fin:
+        break
+
     values = line.split("\t")
     #print(ctr, values)
 
@@ -126,17 +141,24 @@ for line in file_in:
     json_txt1 = json.dumps(json1, sort_keys=True)
     #print(json_txt1)
 
-    r = requests.post("http://listener.logz.io:8070?token=MtnLBuVwrHlHVBTTDLbnkzuDwnOxqoHl&type=irefweb", data=json_txt1)
-    #res = es.index(index="irefweb", doc_type='resource', body=json_txt1, id=ctr)
+    try:
+        res = es.index(index="irefweb", doc_type='resource', body=json_txt1, id=ctr)
+        print(ctr, uri_id, res['result'])
+    except:
+        time.sleep(300)
+        try:
+            res = es.index(index="irefweb", doc_type='resource', body=json_txt1, id=ctr)
+            print(ctr, uri_id, res['result'])
+        except:
+            time.sleep(300)
 
     res = {}
     res['ctr'] = ctr
     res['uri_id'] = uri_id
-    res['type'] = 'irefweb'
+    res['index'] = 'irefweb'
     res['timestamp'] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S")
 
-    #print(ctr, uri_id, res['result'])
-    print(ctr, uri_id, res)
+    #print(ctr, uri_id, res)
     #print(ctr, uri_id, res)
     json_txt2 = json.dumps(res, sort_keys=True).replace('_','')
     #print(json_txt2)
